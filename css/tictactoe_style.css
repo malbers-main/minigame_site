@@ -39,7 +39,7 @@ body {
 }
 
 .activePlayer {
-  color: green;
+  color: rgb(0, 93, 0);
   animation: pulsate 1s infinite alternate;
   animation: activeGlow 1s infinite alternate;
 }
