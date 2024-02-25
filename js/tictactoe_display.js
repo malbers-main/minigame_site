@@ -95,6 +95,19 @@ function displayWinner(winner) {
 }
 
 export function clearDisplays() {
+  // Clear user dispaly styles
+  let xPlayer = document.getElementById("xHolder");
+  let oPlayer = document.getElementById("oHolder");
+  xPlayer.classList.remove("activePlayer");
+  xPlayer.classList.remove("inactivePlayer");
+  xPlayer.classList.remove("winningPlayer");
+  xPlayer.classList.remove("losingPlayer");
+  oPlayer.classList.remove("activePlayer");
+  oPlayer.classList.remove("inactivePlayer");
+  oPlayer.classList.remove("winningPlayer");
+  oPlayer.classList.remove("losingPlayer");
+
+
   // Clear the contents of the nextPlayer display
   let nextPlayerDiv = document.getElementById("nextPlayerDisplay");
   nextPlayerDiv.innerHTML = "";
