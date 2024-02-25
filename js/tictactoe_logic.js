@@ -1,5 +1,7 @@
-const rows = 3;
-const cols = 3;
+import { displayBoard, clearDisplays } from "./tictactoe_display.js";
+
+export const rows = 3;
+export const cols = 3;
 
 // Holds the value of the next piece to be played (X or O)
 export var nextPiece;
@@ -12,7 +14,6 @@ export var winner;
 
 // Initialize board state and reset all global values
 function startGame() {
-  size = 0;
   nextPiece = -1;
   winner = -2;
 
@@ -22,8 +23,9 @@ function startGame() {
   } else {
     initializeBoard();
   }
-
   pickFirstPlayer();
+  clearDisplays();
+  displayBoard(board);
 }
 
 // Create 3x3 board and initialize all values to -1
@@ -42,6 +44,9 @@ function clearBoard() {
 
 // Return number of moves made
 function calculateBoardSize() {
+  if (!board) {
+    return;
+  }
   var count = 0;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -50,13 +55,17 @@ function calculateBoardSize() {
       }
     }
   }
-  size = count;
+  return count;
 }
 
 /*-----------------------------------------------------------------------------------------------*/
 
 // Places new piece onto the board and switches the next piece to the other player
 function placePiece(index) {
+  // New piece only placed if board isn't full, board is initialized, and a winner or tie has not been found
+  if (calculateBoardSize() === 9 || !board || winner != -2) {
+    return;
+  }
   placePieceByIndex(index);
   checkWinner(nextPiece);
   toggleNextPiece();
@@ -102,21 +111,21 @@ function placePieceRowCol(row, column) {
 
 /*-----------------------------------------------------------------------------------------------*/
 
+// Changes 'winner' global variable to reflect if a winner or tie has been found, or if the game is ongoing
 function checkWinner(player) {
   if (determineWinner(player)) {
     return winner;
   }
-
   // If there is no winner found then see if the board is full or not and determine if its a tie
   if (calculateBoardSize() === 9) {
     winner = -1;
   } else {
     winner = -2;
   }
-
   return winner;
 }
 
+// Checks if the player has any wins
 function determineWinner(player) {
   if (
     checkWinnerRows(player) ||
@@ -128,8 +137,9 @@ function determineWinner(player) {
   return false;
 }
 
+// Checks if the player has wins in any of the rows
 function checkWinnerRows(player) {
-  let count;
+  let count = 0;
 
   for (let i = 0; i < rows; i++) {
     count = 0;
@@ -140,14 +150,16 @@ function checkWinnerRows(player) {
     }
     if (count === cols) {
       winner = player;
+      console.log("Row Victory");
       return true;
     }
   }
   return false;
 }
 
+// Checks if the player has wins in any of the columns
 function checkWinnerCols(player) {
-  let count;
+  let count = 0;
 
   for (let i = 0; i < cols; i++) {
     count = 0;
@@ -158,35 +170,36 @@ function checkWinnerCols(player) {
     }
     if (count === rows) {
       winner = player;
+      console.log("Column Victory");
       return true;
     }
   }
   return false;
 }
 
+// Checks if the player has wins on the diagonals
 function checkWinnerDiag(player) {
-  let count = 0;
+  let countDiag1 = 0; // Count for diagonal from top-left to bottom-right
+  let countDiag2 = 0; // Count for diagonal from top-right to bottom-left
 
+  // Check diagonal from top-left to bottom-right
   for (let i = 0; i < rows; i++) {
     if (board[i][i] === player) {
-      count++;
+      countDiag1++;
     }
-  }
-  if (count === rows) {
-    winner = player;
-    return true;
   }
 
-  count = 0;
-  for (let i = rows - 1; i >= 0; i--) {
-    for (let j = 0; j < cols; j++) {
-      if (board[i][j] === player) {
-        count++;
-      }
+  // Check diagonal from top-right to bottom-left
+  for (let i = 0; i < rows; i++) {
+    if (board[i][rows - 1 - i] === player) {
+      countDiag2++;
     }
   }
-  if (count === rows) {
+
+  // Check if either diagonal has a winning sequence
+  if (countDiag1 === rows || countDiag2 === rows) {
     winner = player;
+    console.log("Diagonal Victory");
     return true;
   }
 
@@ -195,10 +208,37 @@ function checkWinnerDiag(player) {
 
 /*-----------------------------------------------------------------------------------------------*/
 
+// Switches player from X to O or O to X
 function toggleNextPiece() {
   nextPiece = nextPiece === 0 ? 1 : 0;
 }
 
+// Randomly selects 0 or 1 to represent the first player
 function pickFirstPlayer() {
   nextPiece = Math.round(Math.random());
 }
+
+/*-----------------------------------------------------------------------------------------------*/
+
+// Start game button event listener
+const startButton = document.getElementById("startButton");
+startButton.addEventListener("click", function () {
+  startGame();
+});
+
+// Event listener to initialize functions for objects and begin the game once the DOM content is loaded
+document.addEventListener("DOMContentLoaded", function () {
+  const gridBoxes = document.querySelectorAll(".gridBox");
+  gridBoxes.forEach(function (box) {
+    box.addEventListener("click", function () {
+      let boxNumber = parseInt(box.id[3]);
+      // Piece is only placed and the board is only updated if the board is initialized
+      if (board) {
+        placePiece(boxNumber);
+        displayBoard(board);
+      }
+    });
+  });
+
+  startGame();
+});
