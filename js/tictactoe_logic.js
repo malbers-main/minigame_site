@@ -66,47 +66,74 @@ function placePiece(index) {
   if (calculateBoardSize() === 9 || !board || winner != -2) {
     return;
   }
-  placePieceByIndex(index);
-  checkWinner(nextPiece);
-  toggleNextPiece();
+
+  // Only check for the winner and toggle the next piece if a piece was placed
+  if (placePieceByIndex(index)) {
+    checkWinner(nextPiece);
+    toggleNextPiece();
+  }
 }
 
 // Helper function to convert index to rows and columns
 function placePieceByIndex(index) {
   switch (index) {
     case 0:
-      placePieceRowCol(0, 0);
+      if (placePieceRowCol(0, 0)) {
+        return true;
+      }
       break;
     case 1:
-      placePieceRowCol(0, 1);
+      if (placePieceRowCol(0, 1)) {
+        return true;
+      }
       break;
     case 2:
-      placePieceRowCol(0, 2);
+      if (placePieceRowCol(0, 2)) {
+        return true;
+      }
       break;
     case 3:
-      placePieceRowCol(1, 0);
+      if (placePieceRowCol(1, 0)) {
+        return true;
+      }
       break;
     case 4:
-      placePieceRowCol(1, 1);
+      if (placePieceRowCol(1, 1)) {
+        return true;
+      }
       break;
     case 5:
-      placePieceRowCol(1, 2);
+      if (placePieceRowCol(1, 2)) {
+        return true;
+      }
       break;
     case 6:
-      placePieceRowCol(2, 0);
+      if (placePieceRowCol(2, 0)) {
+        return true;
+      }
       break;
     case 7:
-      placePieceRowCol(2, 1);
+      if (placePieceRowCol(2, 1)) {
+        return true;
+      }
       break;
     case 8:
-      placePieceRowCol(2, 2);
+      if (placePieceRowCol(2, 2)) {
+        return true;
+      }
       break;
   }
+  return false;
 }
 
 // Helper function to place the piece in the correct area on the board
 function placePieceRowCol(row, column) {
+  // Only place piece if its not already populated
+  if (board[row][column] != -1) {
+    return false;
+  }
   board[row][column] = nextPiece;
+  return true;
 }
 
 /*-----------------------------------------------------------------------------------------------*/
