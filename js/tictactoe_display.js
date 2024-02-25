@@ -2,7 +2,6 @@ import { board, winner, nextPiece, rows, cols } from "./tictactoe_logic.js";
 
 // Displays the board information as well as the winner and next player
 export function displayBoard(board) {
-
   const gridBoxes = document.querySelectorAll(".gridBox");
   let boxCount = 0;
 
@@ -23,6 +22,8 @@ export function displayBoard(board) {
 
 // Displays what symbol is placed next 'I.E. who the current player is'
 function displayNextPlayer(nextPiece) {
+  setUserDisplays(nextPiece);
+
   // Get container element and clear inner html
   let nextPlayerDiv = document.getElementById("nextPlayerDisplay");
   nextPlayerDiv.innerHTML = "";
@@ -36,14 +37,47 @@ function displayNextPlayer(nextPiece) {
   nextPlayerDiv.appendChild(header);
 }
 
+// Change the css styles of the user profiles
+function setUserDisplays(nextPiece) {
+  let xPlayer = document.getElementById("xHolder");
+  let oPlayer = document.getElementById("oHolder");
+
+  if (nextPiece === 1) {
+    xPlayer.classList.add("activePlayer");
+    xPlayer.classList.remove("inactivePlayer");
+    oPlayer.classList.add("inactivePlayer");
+    oPlayer.classList.remove("activePlayer");
+  } else {
+    oPlayer.classList.add("activePlayer");
+    oPlayer.classList.remove("inactivePlayer");
+    xPlayer.classList.add("inactivePlayer");
+    xPlayer.classList.remove("activePlayer");
+  }
+}
+
 // Displays the winner's symbol or tie if one exists
 function displayWinner(winner) {
+  let xPlayer = document.getElementById("xHolder");
+  let oPlayer = document.getElementById("oHolder");
+
   var winnerPiece;
   if (winner === 0) {
+    xPlayer.classList.add("losingPlayer");
+    xPlayer.classList.remove("activePlayer");
+    oPlayer.classList.remove("inactivePlayer");
+    oPlayer.classList.add("winningPlayer");
     winnerPiece = "O";
   } else if (winner === 1) {
+    oPlayer.classList.add("losingPlayer");
+    oPlayer.classList.remove("activePlayer");
+    xPlayer.classList.remove("inactivePlayer");
+    xPlayer.classList.add("winningPlayer");
     winnerPiece = "X";
   } else if (winner === -1) {
+    oPlayer.classList.add("inactivePlayer");
+    oPlayer.classList.remove("activePlayer");
+    xPlayer.classList.remove("activePlayer");
+    xPlayer.classList.add("inactivePlayer");
     winnerPiece = "Tie";
   } else {
     return;

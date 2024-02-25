@@ -62,7 +62,7 @@ function calculateBoardSize() {
 
 // Places new piece onto the board and switches the next piece to the other player
 function placePiece(index) {
-  // New piece only placed if board isn't full, board is initialized, and a winner or tie has not been found
+  // New piece only placed if board isn't full, board is initialized, and a winner or tie has not been foundÏ
   if (calculateBoardSize() === 9 || !board || winner != -2) {
     return;
   }
