@@ -31,6 +31,12 @@ body {
   cursor: pointer;
 }
 
+.winningBox {
+    color: rgb(193, 164, 0);
+    animation: pulsate 1s infinite alternate;
+    animation: winningSparkle 1s infinite alternate;
+}
+
 /*-----------------------------------------------------------------------------------------------*/
 
 .playerContainer {

@@ -233,6 +233,55 @@ function checkWinnerDiag(player) {
   return false;
 }
 
+// Returns indices of winning boxes
+export function getWinningBoxes(board, winner) {
+    // Define all possible winning combinations
+    const winningCombos = [
+        [[0, 0], [0, 1], [0, 2]], // Top row
+        [[1, 0], [1, 1], [1, 2]], // Middle row
+        [[2, 0], [2, 1], [2, 2]], // Bottom row
+        [[0, 0], [1, 0], [2, 0]], // Left column
+        [[0, 1], [1, 1], [2, 1]], // Middle column
+        [[0, 2], [1, 2], [2, 2]], // Right column
+        [[0, 0], [1, 1], [2, 2]], // Diagonal from top-left to bottom-right
+        [[0, 2], [1, 1], [2, 0]]  // Diagonal from top-right to bottom-left
+    ];
+
+    // Array to store the winning indices
+    let winningIndices = [];
+
+    // Iterate through each winning combination
+    for (const combo of winningCombos) {
+        const [[aX, aY], [bX, bY], [cX, cY]] = combo;
+        // Check if the winner occupies all positions in the current combination
+        if (board[aX][aY] === winner && board[bX][bY] === winner && board[cX][cY] === winner) {
+            // If yes, add the winning indices to the array
+            winningIndices.push(...[aX * 3 + aY, bX * 3 + bY, cX * 3 + cY]);
+        }
+    }
+
+    // Return the array of winning indices
+    return winningIndices;
+}
+
+/*-----------------------------------------------------------------------------------------------*/
+
+function setupPage() {
+  const gridBoxes = document.querySelectorAll(".gridBox");
+  gridBoxes.forEach(function (box) {
+    box.addEventListener("click", function () {
+      let boxNumber = parseInt(box.id[3]);
+      // Piece is only placed and the board is only updated if the board is initialized
+      if (board) {
+        placePiece(boxNumber);
+        displayBoard(board);
+      }
+    });
+  });
+
+  startGame();
+}
+
 /*-----------------------------------------------------------------------------------------------*/
 
 // Switches player from X to O or O to X
@@ -254,18 +303,4 @@ startButton.addEventListener("click", function () {
 });
 
 // Event listener to initialize functions for objects and begin the game once the DOM content is loaded
-document.addEventListener("DOMContentLoaded", function () {
-  const gridBoxes = document.querySelectorAll(".gridBox");
-  gridBoxes.forEach(function (box) {
-    box.addEventListener("click", function () {
-      let boxNumber = parseInt(box.id[3]);
-      // Piece is only placed and the board is only updated if the board is initialized
-      if (board) {
-        placePiece(boxNumber);
-        displayBoard(board);
-      }
-    });
-  });
-
-  startGame();
-});
+document.addEventListener("DOMContentLoaded", setupPage());

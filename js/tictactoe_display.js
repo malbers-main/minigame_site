@@ -1,4 +1,11 @@
-import { board, winner, nextPiece, rows, cols } from "./tictactoe_logic.js";
+import {
+  board,
+  winner,
+  nextPiece,
+  rows,
+  cols,
+  getWinningBoxes,
+} from "./tictactoe_logic.js";
 
 // Displays the board information as well as the winner and next player
 export function displayBoard(board) {
@@ -15,7 +22,6 @@ export function displayBoard(board) {
       boxCount++;
     }
   }
-
   displayNextPlayer(nextPiece);
   displayWinner(winner);
 }
@@ -85,6 +91,8 @@ function displayWinner(winner) {
 
   let header = document.createElement("h2");
   if (winnerPiece != "Tie") {
+    let winningIndices = getWinningBoxes(board, winner);
+    displayWinningBoxes(winningIndices);
     header.textContent = `Winner: ${winnerPiece}`;
   } else {
     header.textContent = `${winnerPiece}`;
@@ -92,6 +100,16 @@ function displayWinner(winner) {
   let winnerContainer = document.getElementById("winnerDisplay");
   winnerContainer.innerHTML = "";
   winnerContainer.appendChild(header);
+}
+
+function displayWinningBoxes(winningIndices) {
+  // Clear the contents of the grid boxes
+  const gridBoxes = document.querySelectorAll(".gridBox");
+  for (let i = 0; i < gridBoxes.length; i++) {
+    if (winningIndices.includes(i)) {
+        gridBoxes[i].classList.add("winningBox");
+    }
+  }
 }
 
 export function clearDisplays() {
@@ -107,7 +125,6 @@ export function clearDisplays() {
   oPlayer.classList.remove("winningPlayer");
   oPlayer.classList.remove("losingPlayer");
 
-
   // Clear the contents of the nextPlayer display
   let nextPlayerDiv = document.getElementById("nextPlayerDisplay");
   nextPlayerDiv.innerHTML = "";
@@ -116,9 +133,10 @@ export function clearDisplays() {
   let winnerContainer = document.getElementById("winnerDisplay");
   winnerContainer.innerHTML = "";
 
-  // Clear the contents of the grid boxes
+  // Clear the contents of the grid boxes and reset the winning boxes styles
   const gridBoxes = document.querySelectorAll(".gridBox");
   gridBoxes.forEach(function (box) {
     box.textContent = "";
+    box.classList.remove("winningBox");
   });
 }
